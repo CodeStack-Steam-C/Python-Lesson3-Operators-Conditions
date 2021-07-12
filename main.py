@@ -1,6 +1,7 @@
-let random = 50
-game.onUpdateInterval(1000, function on_update_interval() {
-    let projectile = sprites.createProjectileFromSide(img`
+random = 50
+
+def on_update_interval():
+    projectile = sprites.create_projectile_from_side(img("""
         . . . . . . . . . . . . . . . .
         . . . . . . . . . . . . . . . .
         . . . . . . . . . . . . . . . .
@@ -17,25 +18,25 @@ game.onUpdateInterval(1000, function on_update_interval() {
         . . . . . . . c . . . . . . . .
         . . . . . . . . . . . . . . . .
         . . . . . . . . . . . . . . . .
-    `, randint(-random, random), randint(-random, random))
-})
-sprites.onOverlap(SpriteKind.Player, SpriteKind.Projectile, function on_on_overlap(sprite: Sprite, otherSprite: Sprite) {
-    
-    if (info.score() < 100) {
+    """), randint(-random, random), randint(-random, random))
+game.on_update_interval(1000, on_update_interval)
+
+def on_on_overlap(sprite, otherSprite):
+    global random
+    if info.score() < 100:
         sprite.say(random)
         random += 1
-    } else if (info.score() >= 100 && info.score() < 400) {
+    elif info.score() >= 100 and info.score() < 400:
         sprite.say("in the middle")
         random *= 1.1
-    } else {
+    else:
         sprite.say("")
         random -= 1
-    }
-    
-    sprite.startEffect(effects.spray, 500)
-    info.changeScoreBy(1)
-})
-let sprite = sprites.create(img`
+    sprite.start_effect(effects.spray, 500)
+    info.change_score_by(1)
+sprites.on_overlap(SpriteKind.Player, SpriteKind.projectile, on_on_overlap)
+
+sprite = sprites.create(img("""
     4 4 4 . . 4 4 4 4 4 . . . . . .
     4 5 5 4 4 5 5 5 5 5 4 4 . . . .
     b 4 5 5 1 5 1 1 1 5 5 5 4 . . .
@@ -52,7 +53,7 @@ let sprite = sprites.create(img`
     . . . c 4 4 4 4 4 4 4 4 5 5 5 4
     . . . . c c b 4 4 4 b b 4 5 4 4
     . . . . . . c c c c c c b b 4 .
-`, SpriteKind.Player)
-sprite.setStayInScreen(true)
-controller.moveSprite(sprite)
-info.startCountdown(30)
+"""), SpriteKind.player)
+sprite.set_stay_in_screen(True)
+controller.move_sprite(sprite)
+info.start_countdown(30)
